@@ -66,6 +66,26 @@ exports.update_user = async (req, res) => {
   }
 };
 
+exports.update_avatar = async (req, res) => {
+  console.log(req.body);
+  try {
+    const user = await User.updateOne(
+      { _id: req.params.userId },
+      { $set: { avatar: req.file.path } }
+    );
+    res.status(200).json({
+      code: 200,
+      data: user,
+      message: "Sucess",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
 exports.delete_user = async (req, res) => {
   try {
     const user = await User.remove({ _id: req.params.userId });
