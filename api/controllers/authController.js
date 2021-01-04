@@ -57,26 +57,45 @@ exports.register = (req, res) => {
   });
 };
 
-exports.login = (req, res) => {
-  res.status(200).json({
-    code: 200,
-    data: {
-      user: {
-        id: 1,
-        nama_lengkap: "Kevin",
-        email: "kevin@gmail.com",
-        telepon: "0812345678",
-        lokasi: "http://google.com/maps/a1seqwe123123",
-        avatar: "http://avatar.com/img/a1seqwe123123",
-        role: 1,
-        created_at: "2020-12-12",
-        updated_at: null,
+exports.login = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user === null) {
+      return res.status(401).json({
+        message: "Email not found",
+      });
+    }
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+      return res.status(401).json({
+        message: "Wrong password",
+      });
+    }
+    const token = jwt.sign(
+      {
+        email: user.email,
+        userId: user._id,
       },
-      token:
-        "asjdaldinulfhaskldjfhlkjashflsauyfliuysadlbfkaweriuwayeiruywalbnrkwajhrkjhsadkfysadibufsadkjfhsdhfjksdahfksdhaflkwaeilrywkljefhlkwaefylkwauelfknhlkasjhflksjdhfiuwaehklrjwhkfjwhalkfjhawe",
-    },
-    message: "Login berhasil",
-  });
+      JWT_KEY,
+      {
+        expiresIn: "5h",
+      }
+    );
+
+    res.status(200).json({
+      code: 200,
+      data: {
+        user: user,
+        token: token,
+      },
+      message: "Login berhasil",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: err,
+    });
+  }
 };
 
 exports.forgot_password = (req, res) => {
