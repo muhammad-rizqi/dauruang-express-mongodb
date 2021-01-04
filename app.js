@@ -34,9 +34,11 @@ app.use((req, res, next) => {
 
 // routes
 const authRoutes = require("./api/routes/auth");
+const userRoutes = require("./api/routes/users");
+const checkAuth = require("./api/middleware/check-auth");
 
+app.use("/api/users", checkAuth, userRoutes);
 app.use("/api", authRoutes);
-
 // error middleware
 app.use((req, res, next) => {
   const error = new Error("Not Found");
