@@ -36,7 +36,6 @@ exports.get_user_by_token = async (req, res) => {
     res.status(200).json({
       code: 200,
       data: user,
-      message: "Updated Successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -55,7 +54,6 @@ exports.update_user = async (req, res) => {
     );
     res.status(200).json({
       code: 200,
-      data: user,
       message: "Sucess",
     });
   } catch (error) {
@@ -75,7 +73,6 @@ exports.update_avatar = async (req, res) => {
     );
     res.status(200).json({
       code: 200,
-      data: user,
       message: "Sucess",
     });
   } catch (error) {
