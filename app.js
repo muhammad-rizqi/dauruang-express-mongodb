@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const { DB_URL } = require("./config");
 
 const app = express();
+const checkAuth = require("./api/middleware/check-auth");
 
 // mongoose
 mongoose.connect(DB_URL, {
@@ -35,10 +36,12 @@ app.use((req, res, next) => {
 // routes
 const authRoutes = require("./api/routes/auth");
 const userRoutes = require("./api/routes/users");
-const checkAuth = require("./api/middleware/check-auth");
+const sampahRoutes = require("./api/routes/sampah");
 
+app.use("/api/sampah", checkAuth, sampahRoutes);
 app.use("/api/users", checkAuth, userRoutes);
 app.use("/api", authRoutes);
+
 // error middleware
 app.use((req, res, next) => {
   const error = new Error("Not Found");
