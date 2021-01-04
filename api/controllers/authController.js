@@ -6,6 +6,7 @@ const { JWT_KEY } = require("../../config");
 
 exports.register = (req, res) => {
   const { nama_lengkap, email, password, telepon, lokasi } = req.body;
+
   console.log(req.body);
   bcrypt.hash(password, 10, (err, hash) => {
     console.log("hasing password");
@@ -24,6 +25,7 @@ exports.register = (req, res) => {
         telepon: telepon,
         lokasi: lokasi,
         password: hash,
+        role: req.body.role ? req.body.role : 1,
       });
       user
         .save()
