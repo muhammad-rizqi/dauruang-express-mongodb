@@ -1,23 +1,82 @@
-exports.get_all_user = (req, res) => {
-  res.status(200).json({
-    message: "Sucess",
-  });
+const User = require("../models/user");
+
+exports.get_all_user = async (req, res) => {
+  try {
+    const user = await User.find();
+    res.status(200).json({
+      code: 200,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
 
-exports.get_user_by_id = (req, res) => {
-  res.status(200).json({
-    message: "Sucess",
-  });
+exports.get_user_by_id = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    res.status(200).json({
+      code: 200,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
 
-exports.update_user = (req, res) => {
-  res.status(200).json({
-    message: "Sucess",
-  });
+exports.get_user_by_token = async (req, res) => {
+  try {
+    const user = await User.findById(req.userData.userId);
+    res.status(200).json({
+      code: 200,
+      data: user,
+      message: "Updated Successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
 
-exports.delete_user = (req, res) => {
-  res.status(200).json({
-    message: "Sucess",
-  });
+exports.update_user = async (req, res) => {
+  console.log(req.body);
+  try {
+    const user = await User.updateOne(
+      { _id: req.params.userId },
+      { $set: req.body }
+    );
+    res.status(200).json({
+      code: 200,
+      data: user,
+      message: "Sucess",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
+exports.delete_user = async (req, res) => {
+  try {
+    const user = await User.remove({ _id: req.params.userId });
+    res.status(200).json({
+      code: 200,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
