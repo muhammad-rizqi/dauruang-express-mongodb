@@ -6,6 +6,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   telepon: { type: String, required: true },
   lokasi: { type: String, required: true },
+  password: { type: String, required: true },
   avatar: {
     type: String,
     default: "https://picsum.photos/200",
