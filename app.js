@@ -8,10 +8,14 @@ const app = express();
 const checkAuth = require("./api/middleware/check-auth");
 
 // mongoose
-mongoose.connect(DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+try {
+  mongoose.connect(DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+} catch (error) {
+  console.log(error);
+}
 
 //middleware
 app.use(morgan("dev"));
