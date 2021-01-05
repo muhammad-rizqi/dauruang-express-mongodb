@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/userController");
+const JemputController = require("../controllers/jemputController");
 const upload = require("../utils/multerUtilities");
 
 router.get("/", UserController.get_all_user);
@@ -12,4 +13,9 @@ router.patch(
   upload.single("avatar"),
   UserController.update_avatar
 );
+
+//router.get("/:userId/penyetoran", UserController.get_user_by_id);
+//router.get("/:userId/penarikan", UserController.get_user_by_id);
+router.get("/:userId/penjemputan", JemputController.get_jemput_by_user);
+
 module.exports = router;
