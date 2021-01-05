@@ -14,6 +14,7 @@ const jemputSchema = mongoose.Schema({
   pengurus: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    default: null,
   },
 });
 

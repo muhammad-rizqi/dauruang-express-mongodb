@@ -30,7 +30,7 @@ exports.add_jemput = async (req, res) => {
 
 exports.get_jemput = async (req, res) => {
   try {
-    const jemput = await Jemput.find();
+    const jemput = await Jemput.find().populate("pengurus").populate("nasabah");
     res.status(201).json({
       code: 200,
       data: jemput,
@@ -46,7 +46,9 @@ exports.get_jemput = async (req, res) => {
 
 exports.get_jemput_by_user = async (req, res) => {
   try {
-    const jemput = await Jemput.find({ nasabah: req.params.userId });
+    const jemput = await Jemput.find({ nasabah: req.params.userId })
+      .populate("pengurus")
+      .populate("nasabah");
     res.status(201).json({
       code: 200,
       data: jemput,
