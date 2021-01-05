@@ -7,7 +7,7 @@ const jemputSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
-  nama_pengirim: { type: String, required: true, unique: true },
+  nama_pengirim: { type: String, required: true },
   telepon: { type: String, required: true },
   lokasi: { type: String, required: true },
   status: { type: Number, required: true },

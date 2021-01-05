@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/userController");
 const JemputController = require("../controllers/jemputController");
+const TabunganController = require("../controllers/tabunganController");
+
 const upload = require("../utils/multerUtilities");
 
 router.get("/", UserController.get_all_user);
@@ -14,7 +16,7 @@ router.patch(
   UserController.update_avatar
 );
 
-//router.get("/:userId/penyetoran", UserController.get_user_by_id);
+router.get("/:userId/penyetoran", TabunganController.get_setor_by_user);
 //router.get("/:userId/penarikan", UserController.get_user_by_id);
 router.get("/:userId/penjemputan", JemputController.get_jemput_by_user);
 

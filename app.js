@@ -38,10 +38,12 @@ const authRoutes = require("./api/routes/auth");
 const userRoutes = require("./api/routes/users");
 const sampahRoutes = require("./api/routes/sampah");
 const jemputRoutes = require("./api/routes/jemput");
+const setorRoutes = require("./api/routes/setor");
 
 app.use("/api/users", checkAuth, userRoutes);
 app.use("/api/sampah", checkAuth, sampahRoutes);
 app.use("/api/penjemputan", checkAuth, jemputRoutes);
+app.use("/api/penyetoran", checkAuth, setorRoutes);
 app.use("/api", authRoutes);
 
 // error middleware
