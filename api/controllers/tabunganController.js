@@ -75,6 +75,24 @@ exports.get_setor_by_user = async (req, res) => {
   }
 };
 
+exports.get_tarik_by_user = async (req, res) => {
+  try {
+    const docs = await Tabungan.find({
+      nasabah: req.params.userId,
+      keterangan: "tarik",
+    });
+    res.status(200).json({
+      code: 200,
+      data: docs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
 exports.get_tabungan = async (req, res) => {
   try {
     const docs = await Tabungan.find();

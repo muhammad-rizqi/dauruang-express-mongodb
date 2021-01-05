@@ -17,7 +17,7 @@ router.patch(
 );
 
 router.get("/:userId/penyetoran", TabunganController.get_setor_by_user);
-// router.get("/:userId/penarikan", UserController.get_user_by_id);
+router.get("/:userId/penarikan", TabunganController.get_tarik_by_user);
 router.get("/:userId/penjemputan", JemputController.get_jemput_by_user);
 
 module.exports = router;
