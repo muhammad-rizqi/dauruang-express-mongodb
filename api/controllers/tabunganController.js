@@ -11,12 +11,13 @@ exports.add_setor = async (req, res) => {
         ? sampah.harga * berat
         : sampah.harga * berat - sampah.harga * berat * 0.2;
 
-    const tabunganLast = await Tabungan.findOne().sort({ created_at: -1 });
-
-    const saldo = tabunganLast ? tabunganLast.saldo + debit : debit;
+    const tabunganLast = await Tabungan.findOne().sort({ tanggal: "desc" });
+    console.log(tabunganLast);
+    const saldo = tabunganLast !== null ? tabunganLast.saldo + debit : debit;
 
     const tabungan = new Tabungan({
       _id: mongoose.Types.ObjectId(),
+      tanggal: new Date(),
       keterangan: "setor",
       nasabah: id_nasabah,
       jenis_sampah: jenis_sampah,
@@ -35,22 +36,74 @@ exports.add_setor = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      code: 200,
+      code: 500,
       error: error,
     });
   }
 };
 
-exports.get_setor = (req, res) => {
-  res.status(200).json({
-    code: 200,
-    message: "GET Success",
-  });
+exports.get_setor = async (req, res) => {
+  try {
+    const docs = await Tabungan.find({ keterangan: "setor" });
+    res.status(200).json({
+      code: 200,
+      data: docs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
 
-exports.get_setor_by_user = (req, res) => {
-  res.status(200).json({
-    code: 200,
-    message: "GET Success with id : " + req.params.userId,
-  });
+exports.get_setor_by_user = async (req, res) => {
+  try {
+    const docs = await Tabungan.find({
+      nasabah: req.params.userId,
+      keterangan: "setor",
+    });
+    res.status(200).json({
+      code: 200,
+      data: docs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
+exports.get_tabungan = async (req, res) => {
+  try {
+    const docs = await Tabungan.find();
+    res.status(200).json({
+      code: 200,
+      data: docs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
+exports.get_saldo_by_user = async (req, res) => {
+  try {
+    const docs = await Tabungan.find({
+      nasabah: req.params.userId,
+      keterangan: "setor",
+    });
+    res.status(200).json({
+      code: 200,
+      data: docs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };

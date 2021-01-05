@@ -4,7 +4,7 @@ const tabunganSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   tanggal: {
     type: Date,
-    default: new Date(),
+    required: true,
   },
   nasabah: {
     type: mongoose.Schema.Types.ObjectId,
