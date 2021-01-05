@@ -14,11 +14,12 @@ mongoose
     useCreateIndex: true,
     useUnifiedTopology: true,
   })
-  .then((res) => {
+  .then(() => {
     console.log("DB Connected!");
   })
   .catch((err) => {
-    console.log(Error, err.message);
+    console.log(err.message);
+    console.error(err);
   });
 
 //middleware
