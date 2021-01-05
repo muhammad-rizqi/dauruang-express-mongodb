@@ -92,13 +92,13 @@ exports.get_tabungan = async (req, res) => {
 
 exports.get_saldo_by_user = async (req, res) => {
   try {
-    const docs = await Tabungan.find({
+    const docs = await Tabungan.findOne({
       nasabah: req.params.userId,
-      keterangan: "setor",
-    });
+    }).sort({ tanggal: "desc" });
+
     res.status(200).json({
       code: 200,
-      data: docs,
+      data: { saldo: docs ? docs.saldo : 0 },
     });
   } catch (error) {
     res.status(500).json({
