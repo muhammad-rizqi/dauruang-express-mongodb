@@ -1,6 +1,5 @@
 const Jemput = require("../models/jemput");
 const mongoose = require("mongoose");
-const user = require("../models/user");
 
 exports.add_jemput = async (req, res) => {
   const { id_nasabah, nama_pengirim, telepon, lokasi, status } = req.body;
