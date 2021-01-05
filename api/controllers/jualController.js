@@ -75,35 +75,3 @@ exports.get_jual_by_id = async (req, res) => {
     });
   }
 };
-
-exports.update_jual = async (req, res) => {
-  try {
-    await Jual.updateOne({ _id: req.params.jualId }, { $set: req.body });
-    res.status(200).json({
-      code: 200,
-      message: "Update Success",
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      code: 500,
-      error: error,
-    });
-  }
-};
-
-exports.delete_jual = async (req, res) => {
-  try {
-    await Jual.remove({ _id: req.params.jualId });
-    res.status(200).json({
-      code: 200,
-      data: "Delete success",
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      code: 500,
-      error: error,
-    });
-  }
-};
