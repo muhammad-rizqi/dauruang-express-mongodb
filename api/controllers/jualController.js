@@ -1,10 +1,13 @@
 const Jual = require("../models/jual");
+const Bank = require("../models/bank");
 const mongoose = require("mongoose");
 
 exports.add_jual = async (req, res) => {
   const { jenis_sampah, harga, berat, client, id_pengurus } = req.body;
   try {
     const debit = harga * berat;
+    const dataBank = await Bank.findOne().sort({ tanggal: "desc" });
+
     const jual = new Jual({
       _id: mongoose.Types.ObjectId(),
       tanggal: new Date(),
@@ -15,7 +18,19 @@ exports.add_jual = async (req, res) => {
       berat: berat,
       debit: debit,
     });
-    await jual.save();
+    const dataJual = await jual.save();
+
+    const saldo = dataBank ? dataBank.saldo + debit : debit;
+
+    const bank = new Bank({
+      _id: mongoose.Types.ObjectId(),
+      id_penjualan: dataJual._id,
+      tanggal: dataJual.tanggal,
+      keterangan: "jual",
+      debit: debit,
+      saldo: saldo,
+    });
+    await bank.save();
     res.status(201).json({
       code: 201,
       message: "Penjualan berhasil ditambahkan",
