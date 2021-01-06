@@ -2,20 +2,19 @@ const Jemput = require("../models/jemput");
 const mongoose = require("mongoose");
 
 exports.add_jemput = async (req, res) => {
-  const { id_nasabah, nama_pengirim, telepon, lokasi, status } = req.body;
+  const { id_nasabah, nama_pengirim, telepon, lokasi, keterangan } = req.body;
   try {
     const jemput = new Jemput({
       _id: mongoose.Types.ObjectId(),
       nasabah: id_nasabah,
-      nama_pengirim: nama_pengirim,
-      telepon: telepon,
-      lokasi: lokasi,
-      status: 1,
+      nama_pengirim,
+      telepon,
+      lokasi,
+      keterangan,
     });
     const status = await jemput.save();
     res.status(201).json({
       code: 200,
-      data: status,
       message: "Penjemputan diajukan, petugas akan segera menjemput",
     });
   } catch (error) {
@@ -29,10 +28,36 @@ exports.add_jemput = async (req, res) => {
 
 exports.get_jemput = async (req, res) => {
   try {
-    const jemput = await Jemput.find().populate("pengurus").populate("nasabah");
+    const jemputs = await Jemput.find()
+      .populate("pengurus")
+      .populate("nasabah");
     res.status(201).json({
       code: 200,
-      data: jemput,
+      data: jemputs.map((jemput) => {
+        return {
+          id: jemput._id,
+          id_nasabah: jemput.nasabah._id,
+          id_pengurus: jemput.pengurus._id,
+          tanggal: jemput.tanggal,
+          nama_pengirim: jemput.nama_pengirim,
+          telepon: jemput.telepon,
+          keterangan: jemput.keterangan,
+          lokasi: jemput.lokasi,
+          status: jemput.status, // 0 : pending, 1: "dijemput", 2: "selesai", 3: "dibatalkan"
+          relation:
+            penurus == null
+              ? null
+              : {
+                  pengurus: {
+                    id: jemput.pengurus._id,
+                    nama_lengkap: jemput.pengurus.nana_lengkap,
+                    telepon: jemput.pengurus.telepon,
+                    lokasi: jemput.pengurus.lokasi,
+                    avatar: jemput.pengurus.avatar,
+                  },
+                },
+        };
+      }),
     });
   } catch (error) {
     console.log(error);
@@ -45,12 +70,36 @@ exports.get_jemput = async (req, res) => {
 
 exports.get_jemput_by_user = async (req, res) => {
   try {
-    const jemput = await Jemput.find({ nasabah: req.params.userId })
+    const jemputs = await Jemput.find({ nasabah: req.params.userId })
       .populate("pengurus")
       .populate("nasabah");
     res.status(201).json({
       code: 200,
-      data: jemput,
+      data: jemputs.map((jemput) => {
+        return {
+          id: jemput._id,
+          id_nasabah: jemput.nasabah._id,
+          id_pengurus: jemput.pengurus ? jemput.pengurus._id : null,
+          tanggal: jemput.tanggal,
+          nama_pengirim: jemput.nama_pengirim,
+          telepon: jemput.telepon,
+          keterangan: jemput.keterangan,
+          lokasi: jemput.lokasi,
+          status: jemput.status, // 0 : pending, 1: "dijemput", 2: "selesai", 3: "dibatalkan"
+          relation:
+            jemput.pengurus == null
+              ? null
+              : {
+                  pengurus: {
+                    id: jemput.pengurus._id,
+                    nama_lengkap: jemput.pengurus.nana_lengkap,
+                    telepon: jemput.pengurus.telepon,
+                    lokasi: jemput.pengurus.lokasi,
+                    avatar: jemput.pengurus.avatar,
+                  },
+                },
+        };
+      }),
     });
   } catch (error) {
     console.log(error);

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { JWT_KEY } = require("../../config");
+const { JWT_KEY, HOST } = require("../../config");
 
 exports.register = (req, res) => {
   const { nama_lengkap, email, password, telepon, lokasi } = req.body;
@@ -43,7 +43,15 @@ exports.register = (req, res) => {
           res.status(201).json({
             code: 201,
             data: {
-              user: result,
+              user: {
+                id: result._id,
+                nama_lengkap: result.nama_lengkap,
+                email: result.email,
+                telepon: result.telepon,
+                lokasi: result.lokasi,
+                avatar: HOST + result.avatar,
+                role: result.role,
+              },
               token: token,
             },
             message: "Berhasil mendaftar",
@@ -64,14 +72,14 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user === null) {
       return res.status(401).json({
-        code: 401,        
+        code: 401,
         message: "Email not found",
       });
     }
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
       return res.status(401).json({
-        code: 401,        
+        code: 401,
         message: "Wrong password",
       });
     }
@@ -89,7 +97,15 @@ exports.login = async (req, res) => {
     res.status(200).json({
       code: 200,
       data: {
-        user: user,
+        user: {
+          id: user._id,
+          nama_lengkap: user.nama_lengkap,
+          email: user.email,
+          telepon: user.telepon,
+          lokasi: user.lokasi,
+          avatar: HOST + user.avatar,
+          role: user.role,
+        },
         token: token,
       },
       message: "Login berhasil",
