@@ -64,12 +64,14 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user === null) {
       return res.status(401).json({
+        code: 401,        
         message: "Email not found",
       });
     }
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
       return res.status(401).json({
+        code: 401,        
         message: "Wrong password",
       });
     }
@@ -95,6 +97,7 @@ exports.login = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
+      code: 500,
       error: err,
     });
   }

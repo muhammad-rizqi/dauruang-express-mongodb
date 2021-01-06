@@ -1,11 +1,24 @@
 const User = require("../models/user");
+const { HOST } = require("../../config");
 
 exports.get_all_user = async (req, res) => {
   try {
-    const user = await User.find();
+    const users = await User.find().select(
+      "_id avatar role nama_lengkap telepon lokasi"
+    );
     res.status(200).json({
       code: 200,
-      data: user,
+      data: users.map((user) => {
+        return {
+          id: user._id,
+          nama_lengkap: user.nama_lengkap,
+          email: user.email,
+          telepon: user.telepon,
+          lokasi: user.lokasi,
+          avatar: HOST + user.avatar,
+          role: user.role,
+        };
+      }),
     });
   } catch (error) {
     res.status(500).json({
@@ -17,10 +30,22 @@ exports.get_all_user = async (req, res) => {
 
 exports.get_user_by_id = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.params.userId).select(
+      "_id avatar role nama_lengkap telepon lokasi"
+    );
     res.status(200).json({
       code: 200,
-      data: user,
+      data: {
+        user: {
+          id: user._id,
+          nama_lengkap: user.nama_lengkap,
+          email: user.email,
+          telepon: user.telepon,
+          lokasi: user.lokasi,
+          avatar: HOST + user.avatar,
+          role: user.role,
+        },
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -32,10 +57,22 @@ exports.get_user_by_id = async (req, res) => {
 
 exports.get_user_by_token = async (req, res) => {
   try {
-    const user = await User.findById(req.userData.userId);
+    const user = await User.findById(req.userData.userId).select(
+      "_id avatar role nama_lengkap telepon lokasi"
+    );
     res.status(200).json({
       code: 200,
-      data: user,
+      data: {
+        user: {
+          id: user._id,
+          nama_lengkap: user.nama_lengkap,
+          email: user.email,
+          telepon: user.telepon,
+          lokasi: user.lokasi,
+          avatar: HOST + user.avatar,
+          role: user.role,
+        },
+      },
     });
   } catch (error) {
     res.status(500).json({
