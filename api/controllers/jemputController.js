@@ -6,6 +6,7 @@ exports.add_jemput = async (req, res) => {
   try {
     const jemput = new Jemput({
       _id: mongoose.Types.ObjectId(),
+      tanggal: new Date(),
       nasabah: id_nasabah,
       nama_pengirim,
       telepon,
@@ -34,28 +35,36 @@ exports.get_jemput = async (req, res) => {
     res.status(201).json({
       code: 200,
       data: jemputs.map((jemput) => {
+        const pengurus = jemput.pengurus
+          ? {
+              id: jemput.pengurus._id,
+              nama_lengkap: jemput.pengurus.nana_lengkap,
+              telepon: jemput.pengurus.telepon,
+              lokasi: jemput.pengurus.lokasi,
+              avatar: jemput.pengurus.avatar,
+            }
+          : null;
+
         return {
           id: jemput._id,
           id_nasabah: jemput.nasabah._id,
-          id_pengurus: jemput.pengurus._id,
+          id_pengurus: jemput.pengurus ? jemput.pengurus._id : null,
           tanggal: jemput.tanggal,
           nama_pengirim: jemput.nama_pengirim,
           telepon: jemput.telepon,
           keterangan: jemput.keterangan,
           lokasi: jemput.lokasi,
           status: jemput.status, // 0 : pending, 1: "dijemput", 2: "selesai", 3: "dibatalkan"
-          relation:
-            penurus == null
-              ? null
-              : {
-                  pengurus: {
-                    id: jemput.pengurus._id,
-                    nama_lengkap: jemput.pengurus.nana_lengkap,
-                    telepon: jemput.pengurus.telepon,
-                    lokasi: jemput.pengurus.lokasi,
-                    avatar: jemput.pengurus.avatar,
-                  },
-                },
+          relation: {
+            nasabah: {
+              id: jemput.nasabah._id,
+              nama_lengkap: jemput.nasabah.nama_lengkap,
+              telepon: jemput.nasabah.telepon,
+              lokasi: jemput.nasabah.lokasi,
+              avatar: jemput.nasabah.avatar,
+            },
+            pengurus: pengurus,
+          },
         };
       }),
     });

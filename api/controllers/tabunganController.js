@@ -86,10 +86,38 @@ exports.tarik = async (req, res) => {
 
 exports.get_setor = async (req, res) => {
   try {
-    const docs = await Tabungan.find({ keterangan: "setor" });
+    const docs = await Tabungan.find({ keterangan: "setor" })
+      .populate("nasabah")
+      .populate("jenis_sampah");
     res.status(200).json({
       code: 200,
-      data: docs,
+      data: docs.map((setor) => {
+        return {
+          id: setor._id,
+          id_nasabah: setor.nasabah._id,
+          tanggal: setor.tanggal,
+          keterangan: setor.keterangan,
+          jenis_sampah: setor.jenis_sampah._id,
+          berat: setor.berat,
+          debit: setor.debit,
+          kredit: setor.kredit,
+          saldo: setor.saldo,
+          relation: {
+            jenis_sampah: {
+              id: setor.jenis_sampah._id,
+              nama_kategori: setor.jenis_sampah.nama_kategori,
+              harga: setor.jenis_sampah.harga,
+            },
+            nasabah: {
+              id: setor.nasabah._id,
+              nama_lengkap: setor.nasabah.nama_lengkap,
+              telepon: setor.nasabah.telepon,
+              lokasi: setor.nasabah.lokasi,
+              avatar: setor.nasabah.avatar,
+            },
+          },
+        };
+      }),
     });
   } catch (error) {
     res.status(500).json({

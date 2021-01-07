@@ -7,6 +7,7 @@ const jemputSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
+  tanggal: { type: Date, required: true },
   keterangan: { type: String, required: true },
   telepon: { type: String, required: true },
   lokasi: { type: String, required: true },
