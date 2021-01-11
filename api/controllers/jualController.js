@@ -8,7 +8,7 @@ exports.add_jual = async (req, res) => {
   try {
     const debit = harga * berat;
     const dataBank = await Bank.findOne().sort({ tanggal: "desc" });
-
+    const sampah = await Sampah.findById(jenis_sampah);
     const jual = new Jual({
       _id: mongoose.Types.ObjectId(),
       tanggal: new Date(),
