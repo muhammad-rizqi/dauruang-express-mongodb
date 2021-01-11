@@ -25,12 +25,14 @@ exports.add_setor = async (req, res) => {
       debit: debit,
       saldo: saldo,
     });
-
-    const data = await tabungan.save();
+    await Sampah.updateOne(
+      { _id: jenis_sampah },
+      { stok_gudang: sampah.stok_gudang + berat }
+    );
+    await tabungan.save();
 
     res.status(200).json({
       code: 200,
-      data: data,
       message: "Add Success",
     });
   } catch (error) {

@@ -59,6 +59,7 @@ app.use("/api/penyetoran", checkAuth, setorRoutes);
 app.use("/api/penjualan", checkAuth, jualRoutes);
 app.use("/api/penarikan", checkAuth, tarikRoutes);
 app.use("/api/saldo", checkAuth, saldoRoutes);
+app.use("/api/stok", checkAuth, saldoRoutes);
 app.use("/api", authRoutes);
 
 // error middleware

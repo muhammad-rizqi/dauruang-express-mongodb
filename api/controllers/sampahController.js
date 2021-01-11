@@ -29,7 +29,13 @@ exports.get_sampah = async (req, res) => {
     const docs = await Sampah.find();
     res.status(200).json({
       code: 200,
-      data: docs,
+      data: docs.map((sampah) => {
+        return {
+          id: sampah._id,
+          nama_kategori: sampah.nama_kategori,
+          harga: sampah.harga,
+        };
+      }),
     });
   } catch (error) {
     res.status(500).json({
@@ -39,26 +45,74 @@ exports.get_sampah = async (req, res) => {
   }
 };
 
-exports.update_sampah = (req, res) => {
-  const id = req.params.sampahId;
-  res.status(200).json({
-    code: 200,
-    message: "Success UPDATE " + id,
-  });
+exports.get_stok = async (req, res) => {
+  try {
+    const docs = await Sampah.find();
+    res.status(200).json({
+      code: 200,
+      data: docs.map((sampah) => {
+        return {
+          id: sampah._id,
+          nama_kategori: sampah.nama_kategori,
+          harga: sampah.harga,
+          stok_gudang: sampah.stok_gudang,
+        };
+      }),
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
 
-exports.get_sampah_detail = (req, res) => {
-  const id = req.params.sampahId;
-  res.status(200).json({
-    code: 200,
-    message: "Success GET " + id,
-  });
+exports.update_sampah = async (req, res) => {
+  try {
+    await Sampah.updateOne({ _id: req.params.sampahId }, { $set: req.body });
+    res.status(200).json({
+      code: 200,
+      message: "Sucess",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };
 
-exports.delete_sampah = (req, res) => {
+exports.get_sampah_detail = async (req, res) => {
   const id = req.params.sampahId;
-  res.status(200).json({
-    code: 200,
-    message: "Success DELETE " + id,
-  });
+  try {
+    const sampah = await Sampah.find(id);
+    res.status(200).json({
+      code: 200,
+      data: {
+        id: sampah._id,
+        nama_kategori: sampah.nama_kategori,
+        harga: sampah.harga,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
+exports.delete_sampah = async (req, res) => {
+  try {
+    await Sampah.deleteOne(req.params.sampahId);
+    res.status(200).json({
+      code: 200,
+      message: "Sucess dihapus",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
 };

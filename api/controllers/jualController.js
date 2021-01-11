@@ -1,6 +1,7 @@
 const Jual = require("../models/jual");
 const Bank = require("../models/bank");
 const mongoose = require("mongoose");
+const Sampah = require("../models/sampah");
 
 exports.add_jual = async (req, res) => {
   const { jenis_sampah, harga, berat, client, id_pengurus } = req.body;
@@ -19,6 +20,11 @@ exports.add_jual = async (req, res) => {
       debit: debit,
     });
     const dataJual = await jual.save();
+
+    await Sampah.updateOne(
+      { _id: jenis_sampah },
+      { stok_gudang: sampah.stok_gudang - berat }
+    );
 
     const saldo = dataBank ? dataBank.saldo + debit : debit;
 
