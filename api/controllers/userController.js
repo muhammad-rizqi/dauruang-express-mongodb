@@ -117,11 +117,21 @@ exports.update_avatar = async (req, res) => {
 
 exports.delete_user = async (req, res) => {
   try {
-    const user = await User.remove({ _id: req.params.userId });
-    res.status(200).json({
-      code: 200,
-      message: "User deleted successfully",
-    });
+    const user = await User.findById(req.params.userId);
+    const match = await bcrypt.compare(req.body.password, user.password);
+
+    if (match) {
+      await User.remove({ _id: req.params.userId });
+      res.status(200).json({
+        code: 200,
+        message: "User deleted successfully",
+      });
+    } else {
+      return res.status(401).json({
+        code: 401,
+        message: "Wrong password",
+      });
+    }
   } catch (error) {
     res.status(500).json({
       code: 500,
