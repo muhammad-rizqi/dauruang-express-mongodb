@@ -22,6 +22,7 @@ const bankSchema = mongoose.Schema({
   },
   debit: { type: Number, default: 0 },
   kredit: { type: Number, default: 0 },
+  saldo: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("Bank", bankSchema);

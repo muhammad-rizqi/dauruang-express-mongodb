@@ -3,9 +3,7 @@ const { HOST } = require("../../config");
 
 exports.get_all_user = async (req, res) => {
   try {
-    const users = await User.find().select(
-      "_id avatar role nama_lengkap telepon lokasi"
-    );
+    const users = await User.find()
     res.status(200).json({
       code: 200,
       data: users.map((user) => {
@@ -30,9 +28,7 @@ exports.get_all_user = async (req, res) => {
 
 exports.get_user_by_id = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId).select(
-      "_id avatar role nama_lengkap telepon lokasi"
-    );
+    const user = await User.findById(req.params.userId)
     res.status(200).json({
       code: 200,
       data: {
@@ -57,9 +53,7 @@ exports.get_user_by_id = async (req, res) => {
 
 exports.get_user_by_token = async (req, res) => {
   try {
-    const user = await User.findById(req.userData.userId).select(
-      "_id avatar role nama_lengkap telepon lokasi"
-    );
+    const user = await User.findById(req.userData.userId)
     res.status(200).json({
       code: 200,
       data: {

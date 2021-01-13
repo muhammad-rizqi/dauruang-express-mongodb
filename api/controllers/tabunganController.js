@@ -48,9 +48,10 @@ exports.tarik = async (req, res) => {
   const { id_nasabah, kredit } = req.body;
   try {
     const tabunganLast = await Tabungan.findOne().sort({ tanggal: "desc" });
-    console.log(tabunganLast);
+    const dataBank = await Bank.findOne().sort({ tanggal: "desc" });
+    const saldoBank = dataBank ? dataBank.saldo - kredit : kredit;
 
-    if (tabunganLast) {
+    if (tabunganLast && saldoBank >= kredit) {
       const saldo =
         tabunganLast !== null ? tabunganLast.saldo - kredit : kredit;
 
@@ -63,11 +64,20 @@ exports.tarik = async (req, res) => {
         saldo: saldo,
       });
 
-      const data = await tabungan.save();
+      await tabungan.save();
+
+      const bank = new Bank({
+        _id: mongoose.Types.ObjectId(),
+        id_penarikan: data._id,
+        tanggal: data.tanggal,
+        keterangan: "tarik",
+        kredit: kredit,
+        saldo: saldoBank,
+      });
+      await bank.save();
 
       res.status(200).json({
         code: 200,
-        data: data,
         message: "Tarik Success",
       });
     } else {

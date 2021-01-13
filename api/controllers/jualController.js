@@ -52,10 +52,36 @@ exports.add_jual = async (req, res) => {
 
 exports.get_jual = async (req, res) => {
   try {
-    const data = await Jual.find();
+    const data = await Jual.find()
+      .populate("jenis_sampah")
+      .populate("pengurus");
+
     res.status(200).json({
       code: 200,
-      data: data,
+      data: data.map((item) => {
+        return {
+          id: item._id,
+          tanggal: item.tanggal,
+          jenis_sampah: item.jenis_sampah._id,
+          client: item.client,
+          harga_satuan: item.harga_satuan,
+          berat: item.berat,
+          debit: item.debit,
+          relation: {
+            jenis_sampah: {
+              id: item.jenis_sampah._id,
+              nama_kategori: item.jenis_sampah.nama_kategori,
+              harga: item.jenis_sampah.harga,
+            },
+            pengurus: {
+              id: item.pengurus._id,
+              nama_lengkap: item.pengurus.nama_lengkap,
+              telepon: item.pengurus.telepon,
+              avatar: item.pengurus.avatar,
+            },
+          },
+        };
+      }),
     });
   } catch (error) {
     console.log(error);
@@ -72,6 +98,27 @@ exports.get_jual_by_id = async (req, res) => {
     res.status(200).json({
       code: 200,
       data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
+
+exports.get_saldo = async (req, res) => {
+  try {
+    const dataBank = await Bank.findOne().sort({ tanggal: "desc" });
+
+    const saldo = dataBank ? dataBank.saldo : 0;
+
+    res.status(200).json({
+      code: 200,
+      data: {
+        saldo: saldo,
+      },
     });
   } catch (error) {
     console.log(error);
