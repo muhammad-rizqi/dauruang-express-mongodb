@@ -15,6 +15,7 @@ router.patch(
   upload.single("avatar"),
   UserController.update_avatar
 );
+router.patch("/:userId/password", UserController.change_password);
 
 router.get("/:userId/penyetoran", TabunganController.get_setor_by_user);
 router.get("/:userId/penarikan", TabunganController.get_tarik_by_user);
