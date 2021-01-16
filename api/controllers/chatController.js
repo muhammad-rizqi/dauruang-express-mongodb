@@ -1,20 +1,20 @@
-const Sampah = require("../models/sampah");
-
 var mongoose = require("mongoose");
-
-exports.add_sampah = async (req, res) => {
-  const sampah = new Sampah({
+const Chat = require("../models/chat");
+const _ = require("lodash");
+const User = require("../models/user");
+exports.send_chat = async (req, res) => {
+  const chat = new Chat({
     _id: mongoose.Types.ObjectId(),
-    nama_kategori: req.body.nama_kategori,
-    harga: req.body.harga,
-    stok_gudang: req.body.stok_gudang,
+    to: req.body.to,
+    from: req.params.from,
+    pesan: req.body.pesan,
+    tanggal: new Date(),
   });
   try {
-    const docs = await sampah.save();
+    const docs = await chat.save();
     res.status(200).json({
       code: 200,
       data: docs,
-      message: "Add Category Success",
     });
   } catch (error) {
     res.status(500).json({
@@ -24,20 +24,21 @@ exports.add_sampah = async (req, res) => {
   }
 };
 
-exports.get_sampah = async (req, res) => {
+exports.get_chat_user = async (req, res) => {
+  const userId = req.params.userId;
   try {
-    const docs = await Sampah.find();
+    const docs = await Chat.find({ to: userId }).distinct("from");
+
+    const docs2 = await Chat.find({ from: userId }).distinct("to");
+
+    const merged = [...docs, ...docs2];
+
     res.status(200).json({
       code: 200,
-      data: docs.map((sampah) => {
-        return {
-          id: sampah._id,
-          nama_kategori: sampah.nama_kategori,
-          harga: sampah.harga,
-        };
-      }),
+      data: [...new Set([...merged])],
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       code: 500,
       error: error,

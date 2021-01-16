@@ -52,6 +52,7 @@ const saldoRoutes = require("./api/routes/saldo");
 const tarikRoutes = require("./api/routes/tarik");
 const jualRoutes = require("./api/routes/jual");
 const stokRoutes = require("./api/routes/stok");
+const chatRoutes = require("./api/routes/chat");
 
 app.use("/api/users", checkAuth, userRoutes);
 app.use("/api/sampah", checkAuth, sampahRoutes);
@@ -61,6 +62,7 @@ app.use("/api/penjualan", checkAuth, jualRoutes);
 app.use("/api/penarikan", checkAuth, tarikRoutes);
 app.use("/api/saldo", checkAuth, saldoRoutes);
 app.use("/api/stok", checkAuth, stokRoutes);
+app.use("/api/chat", checkAuth, chatRoutes);
 app.use("/api", authRoutes);
 
 // error middleware
