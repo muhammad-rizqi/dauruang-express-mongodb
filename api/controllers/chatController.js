@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 const Chat = require("../models/chat");
 const _ = require("lodash");
-const User = require("../models/user");
 const Contact = require("../models/contact");
+const { HOST } = require("../../config");
 
 exports.send_chat = async (req, res) => {
   const chat = new Chat({
@@ -60,10 +60,30 @@ exports.send_chat = async (req, res) => {
 exports.get_chat_user = async (req, res) => {
   const userId = req.params.userId;
   try {
-    const contact = await Contact.find({ user: userId }).populate("contact");
+    const contact = await Contact.find({ user: userId })
+      .populate("user")
+      .populate("contact");
     res.status(200).json({
       code: 200,
-      data: contact,
+      data: contact.map((item, index) => {
+        return {
+          id: index,
+          to: item.contact._id,
+          from: item.user._id,
+          relation: {
+            from: {
+              id: item.user._id,
+              nama_lengkap: item.user.nama_lengkap,
+              avatar: HOST + item.user.avatar,
+            },
+            to: {
+              id: item.contact._id,
+              nama_lengkap: item.contact.nama_lengkap,
+              avatar: HOST + item.contact.avatar,
+            },
+          },
+        };
+      }),
     });
   } catch (error) {
     console.log(error);
