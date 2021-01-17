@@ -93,3 +93,32 @@ exports.get_chat_user = async (req, res) => {
     });
   }
 };
+
+exports.get_chat_messages = async (req, res) => {
+  try {
+    const chat = await Chat.find({
+      $or: [
+        { $and: [{ to: req.body.to }, { from: req.params.from }] },
+        { $and: [{ to: req.params.from }, { from: req.body.to }] },
+      ],
+    });
+    res.status(200).json({
+      code: 200,
+      data: chat.map((item) => {
+        return {
+          id: item._id,
+          from: item.from,
+          to: item.to,
+          pesan: item.pesan,
+          created_at: item.tanggal,
+        };
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      code: 500,
+      error: error,
+    });
+  }
+};
