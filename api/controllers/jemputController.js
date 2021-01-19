@@ -38,7 +38,7 @@ exports.get_jemput = async (req, res) => {
         const pengurus = jemput.pengurus
           ? {
               id: jemput.pengurus._id,
-              nama_lengkap: jemput.pengurus.nana_lengkap,
+              nama_lengkap: jemput.pengurus.nama_lengkap,
               telepon: jemput.pengurus.telepon,
               lokasi: jemput.pengurus.lokasi,
               avatar: jemput.pengurus.avatar,
