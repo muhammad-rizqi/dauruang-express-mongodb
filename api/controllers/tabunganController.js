@@ -1,6 +1,7 @@
 const Tabungan = require("../models/tabungan");
 const Sampah = require("../models/sampah");
 const mongoose = require("mongoose");
+const Bank = require("../models/bank");
 
 exports.add_setor = async (req, res) => {
   const { id_nasabah, jenis_sampah, berat, dijemput } = req.body;
@@ -64,7 +65,7 @@ exports.tarik = async (req, res) => {
         saldo: saldo,
       });
 
-      await tabungan.save();
+      const data = await tabungan.save();
 
       const bank = new Bank({
         _id: mongoose.Types.ObjectId(),
@@ -83,7 +84,6 @@ exports.tarik = async (req, res) => {
     } else {
       res.status(400).json({
         code: 400,
-        data: data,
         message: "Saldo tidak cukup",
       });
     }
