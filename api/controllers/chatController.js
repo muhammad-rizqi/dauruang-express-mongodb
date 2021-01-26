@@ -4,6 +4,16 @@ const _ = require("lodash");
 const Contact = require("../models/contact");
 const { HOST } = require("../../config");
 
+const Pusher = require("pusher");
+
+const pusher = new Pusher({
+  appId: "1144035",
+  key: "dd8cf49ab599dd57da5d",
+  secret: "4bdc61c2f827e6c7cd63",
+  cluster: "ap1",
+  useTLS: true,
+});
+
 exports.send_chat = async (req, res) => {
   const chat = new Chat({
     _id: mongoose.Types.ObjectId(),
@@ -49,6 +59,8 @@ exports.send_chat = async (req, res) => {
       code: 200,
       data: docs,
     });
+
+    pusher.trigger("my-channel", "my-event", docs);
   } catch (error) {
     res.status(500).json({
       code: 500,

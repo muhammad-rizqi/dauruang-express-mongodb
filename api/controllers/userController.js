@@ -1,6 +1,9 @@
 const User = require("../models/user");
+const PasswordReset = require("../models/password");
 const { HOST } = require("../../config");
 const bcrypt = require("bcrypt");
+const { v4 } = require("uuid");
+const { sendEmail } = require("../utils/mail_helper");
 
 exports.get_all_user = async (req, res) => {
   try {
@@ -170,4 +173,76 @@ exports.change_password = async (req, res) => {
       error: err,
     });
   }
+};
+
+exports.reset_password = async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    res.status(500).json({
+      code: 500,
+      error: "User not found",
+    });
+  }
+  const token = v4().toString().replace(/-/g, "");
+  PasswordReset.updateOne(
+    {
+      user: user._id,
+    },
+    {
+      user: user._id,
+      token: token,
+    },
+    {
+      upsert: true,
+    }
+  )
+    .then(async () => {
+      const resetLink = `${process.env.HOST}reset-confirm/${token}`;
+
+      await sendEmail({
+        to: user.email,
+        subject: "Atur ulang password",
+        text: `Halo ${user.nama_lengkap}, ini link untuk mengatur ulang password Anda: ${resetLink}. 
+        Jika anda tidak meminta nya harap laporkan kepada kami.\n\n Salam \n Admin Daur Uang`,
+      });
+
+      res.status(200).json({
+        code: 200,
+        message: "Token sudah dikirim ke alamat pengguna",
+      });
+    })
+    .catch(() => {
+      res.status(500).json({
+        code: 500,
+        error: "Failed to reset password",
+      });
+    });
+};
+
+exports.reset_confirm = async (req, res) => {
+  const token = req.params.token;
+  const passwordReset = await PasswordReset.findOne({ token });
+
+  /* Update user */
+  let user = await User.findOne({ _id: passwordReset.user });
+  user.password = req.body.password;
+
+  user
+    .save()
+    .then(async (savedUser) => {
+      /* Delete password reset document in collection */
+      await PasswordReset.deleteOne({ _id: passwordReset._id });
+      /* Redirect to login page with success message */
+      res.status(200).json({
+        code: 200,
+        message: "Password berhasil diubah",
+      });
+    })
+    .catch((error) => {
+      /* Redirect back to reset-confirm page */
+      res.status(500).json({
+        code: 500,
+        message: "Password gagal diubah",
+      });
+    });
 };

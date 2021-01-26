@@ -13,7 +13,6 @@ exports.add_setor = async (req, res) => {
         : sampah.harga * berat - sampah.harga * berat * 0.2;
 
     const tabunganLast = await Tabungan.findOne().sort({ tanggal: "desc" });
-    console.log(tabunganLast);
     const saldo = tabunganLast !== null ? tabunganLast.saldo + debit : debit;
 
     const tabungan = new Tabungan({
@@ -28,7 +27,7 @@ exports.add_setor = async (req, res) => {
     });
     await Sampah.updateOne(
       { _id: jenis_sampah },
-      { stok_gudang: sampah.stok_gudang + berat }
+      { stok_gudang: parseFloat(sampah.stok_gudang) + parseFloat(berat) }
     );
     await tabungan.save();
 
