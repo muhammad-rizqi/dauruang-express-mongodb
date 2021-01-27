@@ -104,7 +104,7 @@ exports.get_sampah_detail = async (req, res) => {
 
 exports.delete_sampah = async (req, res) => {
   try {
-    await Sampah.deleteOne(req.params.sampahId);
+    await Sampah.remove({ _id: req.params.sampahId });
     res.status(200).json({
       code: 200,
       message: "Sucess dihapus",

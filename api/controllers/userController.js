@@ -223,9 +223,10 @@ exports.reset_confirm = async (req, res) => {
   const token = req.params.token;
   const passwordReset = await PasswordReset.findOne({ token });
 
+  const new_password = bcrypt.hashSync(req.body.password, 10);
   /* Update user */
   let user = await User.findOne({ _id: passwordReset.user });
-  user.password = req.body.password;
+  user.password = new_password;
 
   user
     .save()
