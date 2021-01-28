@@ -123,7 +123,7 @@ exports.delete_user = async (req, res) => {
     const user = await User.findById(req.params.userId);
     const match = await bcrypt.compare(req.body.password, user.password);
 
-    if (match) {
+    if (req.userData.role === 999 || match) {
       await User.remove({ _id: req.params.userId });
       res.status(200).json({
         code: 200,

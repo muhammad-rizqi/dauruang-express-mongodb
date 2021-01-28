@@ -34,6 +34,7 @@ exports.register = (req, res) => {
             {
               email: result.email,
               _id: result._id,
+              role: user.role,
             },
             JWT_KEY,
             {
@@ -87,6 +88,7 @@ exports.login = async (req, res) => {
       {
         email: user.email,
         userId: user._id,
+        role: user.role,
       },
       JWT_KEY,
       {
