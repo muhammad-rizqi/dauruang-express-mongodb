@@ -52,7 +52,6 @@ const tarikRoutes = require("./api/routes/tarik");
 const jualRoutes = require("./api/routes/jual");
 const stokRoutes = require("./api/routes/stok");
 const chatRoutes = require("./api/routes/chat");
-const react = require("./api/routes/react");
 
 app.use("/api/users", checkAuth, userRoutes);
 app.use("/api/sampah", checkAuth, sampahRoutes);
