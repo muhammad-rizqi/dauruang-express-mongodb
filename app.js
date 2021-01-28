@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { DB_URL } = require("./config");
-
+const path = require("path");
 const app = express();
 const checkAuth = require("./api/middleware/check-auth");
 
@@ -24,6 +24,7 @@ mongoose
 
 //middleware
 app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "build")));
 app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,7 +54,9 @@ const tarikRoutes = require("./api/routes/tarik");
 const jualRoutes = require("./api/routes/jual");
 const stokRoutes = require("./api/routes/stok");
 const chatRoutes = require("./api/routes/chat");
+const react = require("./api/routes/react");
 
+app.use("/", react);
 app.use("/api/users", checkAuth, userRoutes);
 app.use("/api/sampah", checkAuth, sampahRoutes);
 app.use("/api/penjemputan", checkAuth, jemputRoutes);
