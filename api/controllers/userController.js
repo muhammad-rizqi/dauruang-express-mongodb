@@ -121,7 +121,10 @@ exports.update_avatar = async (req, res) => {
 exports.delete_user = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    const match = await bcrypt.compare(req.body.password, user.password);
+    const match =
+      req.userData.role === 999
+        ? true
+        : await bcrypt.compare(req.body.password, user.password);
 
     if (req.userData.role === 999 || match) {
       await User.remove({ _id: req.params.userId });
@@ -136,6 +139,7 @@ exports.delete_user = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       code: 500,
       error: error,
