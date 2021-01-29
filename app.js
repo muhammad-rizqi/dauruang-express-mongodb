@@ -5,13 +5,7 @@ const mongoose = require("mongoose");
 const { DB_URL } = require("./config");
 const app = express();
 const checkAuth = require("./api/middleware/check-auth");
-const cors = require("cors");
 
-app.use(
-  cors({
-    origin: process.env.WEB,
-  })
-);
 // mongoose
 mongoose
   .connect(DB_URL, {
