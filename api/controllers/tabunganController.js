@@ -98,6 +98,7 @@ exports.tarik = async (req, res) => {
 exports.get_setor = async (req, res) => {
   try {
     const docs = await Tabungan.find({ keterangan: "setor" })
+      .sort({ tanggal: "desc" })
       .populate("nasabah")
       .populate("jenis_sampah");
     res.status(200).json({
@@ -143,8 +144,9 @@ exports.get_setor_by_user = async (req, res) => {
     const docs = await Tabungan.find({
       nasabah: req.params.userId,
       keterangan: "setor",
-    }).populate("jenis_sampah");
-    console.log(docs);
+    })
+      .sort({ tanggal: "desc" })
+      .populate("jenis_sampah");
     res.status(200).json({
       code: 200,
       data: docs.map((setor) => {
@@ -181,7 +183,7 @@ exports.get_tarik_by_user = async (req, res) => {
     const docs = await Tabungan.find({
       nasabah: req.params.userId,
       keterangan: "tarik",
-    });
+    }).sort({ tanggal: "desc" });
     res.status(200).json({
       code: 200,
       data: docs.map((tarik) => {

@@ -30,6 +30,7 @@ exports.add_jemput = async (req, res) => {
 exports.get_jemput = async (req, res) => {
   try {
     const jemputs = await Jemput.find()
+      .sort({ tanggal: "desc" })
       .populate("pengurus")
       .populate("nasabah");
     res.status(201).json({
@@ -80,6 +81,7 @@ exports.get_jemput = async (req, res) => {
 exports.get_jemput_by_user = async (req, res) => {
   try {
     const jemputs = await Jemput.find({ nasabah: req.params.userId })
+      .sort({ tanggal: "desc" })
       .populate("pengurus")
       .populate("nasabah");
     res.status(201).json({

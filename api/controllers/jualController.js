@@ -53,6 +53,7 @@ exports.add_jual = async (req, res) => {
 exports.get_jual = async (req, res) => {
   try {
     const data = await Jual.find()
+      .sort({ tanggal: "desc" })
       .populate("jenis_sampah")
       .populate("pengurus");
 
