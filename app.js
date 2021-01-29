@@ -7,7 +7,11 @@ const app = express();
 const checkAuth = require("./api/middleware/check-auth");
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.WEB,
+  })
+);
 // mongoose
 mongoose
   .connect(DB_URL, {
