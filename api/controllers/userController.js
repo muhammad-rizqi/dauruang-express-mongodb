@@ -197,7 +197,7 @@ exports.reset_password = async (req, res) => {
     }
   )
     .then(async () => {
-      const resetLink = `${process.env.HOST}reset-confirm/${token}`;
+      const resetLink = `${process.env.WEB}reset-confirm/${token}`;
 
       await sendEmail({
         to: user.email,
