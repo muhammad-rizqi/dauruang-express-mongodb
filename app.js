@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const { DB_URL } = require("./config");
 const app = express();
 const checkAuth = require("./api/middleware/check-auth");
-const app = express();
+const cors = require("cors");
 
 app.use(
   cors({
